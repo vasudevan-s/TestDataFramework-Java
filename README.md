@@ -9,4 +9,5 @@ In any of the suite test methods (if test data support is needed),
 @TestData(file="your test data file.csv",  rowDataDelimiter = ";")
 
 rowDataDelimiter is optional and if not set, defaults to ",".
+
 Note that the test data framework assumes that the column delimiter is set to ","
