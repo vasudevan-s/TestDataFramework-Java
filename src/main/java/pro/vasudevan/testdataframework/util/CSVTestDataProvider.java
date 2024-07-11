@@ -18,7 +18,7 @@ In any of the suite test methods (if test data support is needed),
 @Test(dataProvider = "TestDataProvider", dataProviderClass = CSVTestDataProvider.class)
 @TestData(file="your test data file.csv",  rowDataDelimiter = ";", firstRowColumnNames = false)
 rowDataDelimiter is optional and if not set, defaults to ","
-firstRowColumnNames is optional and if not set to true, defaults to false.
+firstRowColumnNames is optional and defaults to true.
 This framework supports test data with and without column names in the first row of the CSV.
 If column names are not provided, the Map keys are set to 0...n
 Note that the test data framework assumes the column delimiter as ","
