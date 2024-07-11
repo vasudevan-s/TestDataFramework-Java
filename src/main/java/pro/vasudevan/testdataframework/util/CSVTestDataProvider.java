@@ -16,35 +16,41 @@ It assumes that the test suite test data files are located under src/test/resour
 Syntax on calling:
 In any of the suite test methods (if test data support is needed),
 @Test(dataProvider = "TestDataProvider", dataProviderClass = CSVTestDataProvider.class)
-@TestData(file="your test data file.csv",  rowDataDelimiter = ";")
+@TestData(file="your test data file.csv",  rowDataDelimiter = ";", firstRowColumnNames = false)
 rowDataDelimiter is optional and if not set, defaults to ","
-Note that the test data framework assumes that the column delimiter is set to ","
+firstRowColumnNames is optional and if not set to true, defaults to false.
+This framework supports test data with and without column names in the first row of the CSV.
+If column names are not provided, the Map keys are set to 0...n
+Note that the test data framework assumes the column delimiter as ","
  */
 public class CSVTestDataProvider {
 
     @DataProvider(name = "TestDataProvider")
     public static Iterator<Object[]> getTestData(Method method) throws Exception {
-        List<Map<String, Object>> listOfMap = new ArrayList<>();
-        Map<String, Object> map;
+        List<Map<Object, Object>> listOfMap = new ArrayList<>();
+        Map<Object, Object> map;
+
         String testDataFile = method.getAnnotation(TestData.class).file();
         String rowDelimiter = method.getAnnotation(TestData.class).rowDataDelimiter();
+        boolean firstRowColumnNames = method.getAnnotation(TestData.class).firstRowColumnNames();
+        String[] columnNames = null;
         String filename = FileUtils.getFile("src", "test", "resources", "testData", testDataFile).getAbsolutePath();
 
         try (BufferedReader in = new BufferedReader(new FileReader(filename))) {
-            String[] columnNames = in.readLine().split(",");
+            if (firstRowColumnNames) columnNames = in.readLine().split(",");
 
             String line;
             while ((line = in.readLine()) != null) {
                 String[] eachRow = line.split(rowDelimiter);
                 map = new HashMap<>();
-                for (int i = 0; i < columnNames.length; i++) {
-                    map.put(columnNames[i].trim(), eachRow[i].trim());
+                for (int i = 0; i < eachRow.length; i++) {
+                    var result = firstRowColumnNames ? map.put(columnNames[i].trim(), eachRow[i].trim()) : map.put(i, eachRow[i].trim());
                 }
                 listOfMap.add(map);
             }
         }
         List<Object[]> dataProvider = new ArrayList<>();
-        for (Map<String, Object> finalMap: listOfMap){
+        for (Map<Object, Object> finalMap: listOfMap){
             dataProvider.add(new Object[] {finalMap} );
         }
         return dataProvider.iterator();

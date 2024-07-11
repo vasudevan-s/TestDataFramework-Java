@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  *
  * Created By: Vasudevan Sampath
- * 
+ *
  * TestData.java - custom annotation interface
  * Requires a valid CSV file (virtual path)
  * rowDataDelimiter parameter is optional and if not set, defaults to ","
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface TestData {
-
     String file() default "";
+    boolean firstRowColumnNames() default true;
     String rowDataDelimiter() default ",";
 }
