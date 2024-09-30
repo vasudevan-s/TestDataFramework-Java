@@ -28,7 +28,7 @@ public class CSVTestDataProvider {
     @DataProvider(name = "TestDataProvider")
     public static Iterator<Object[]> getTestData(Method method) throws Exception {
         List<Map<Object, Object>> listOfMap = new ArrayList<>();
-        Map<Object, Object> map;
+        LinkedHashMap<Object, Object> linkedHashMap;
 
         String testDataFile = method.getAnnotation(TestData.class).file();
         String rowDelimiter = method.getAnnotation(TestData.class).rowDataDelimiter();
@@ -42,11 +42,11 @@ public class CSVTestDataProvider {
             String line;
             while ((line = in.readLine()) != null) {
                 String[] eachRow = line.split(rowDelimiter);
-                map = new HashMap<>();
+                linkedHashMap = new LinkedHashMap<>();
                 for (int i = 0; i < eachRow.length; i++) {
-                    var result = firstRowColumnNames ? map.put(columnNames[i].trim(), eachRow[i].trim()) : map.put(i, eachRow[i].trim());
+                    var result = firstRowColumnNames ? linkedHashMap.put(columnNames[i].trim(), eachRow[i].trim()) : linkedHashMap.put(i, eachRow[i].trim());
                 }
-                listOfMap.add(map);
+                listOfMap.add(linkedHashMap);
             }
         }
         List<Object[]> dataProvider = new ArrayList<>();
